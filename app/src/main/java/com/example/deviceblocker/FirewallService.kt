@@ -27,32 +27,64 @@ class FirewallService : VpnService() {
         val devices = mutableListOf<String>()
 
         try {
-            // Detektuj uređaje koristeći ARP tabelu (samo demo implementacija)
-            // U stvarnoj aplikaciji, ovo bi trebalo da koristi pravilnu metodu za skeniranje mreže
-            devices.add("192.168.1.100")
-            devices.add("192.168.1.101")
-            devices.add("192.168.1.102")
-
-            // U stvarnoj implementaciji, ovo bi trebalo da koristi:
-            /*
-            val process = Runtime.getRuntime().exec("arp -a")
-            val reader = BufferedReader(InputStreamReader(process.inputStream))
-            var line: String?
-            while (reader.readLine().also { line = it } != null) {
-                if (line?.contains("192.168") == true && !line.contains("incomplete")) {
-                    // Parsiraj IP adresu iz linije
-                    val ip = parseIPFromArpLine(line)
-                    if (!ip.isNullOrEmpty() && ip != "192.168.1.1") { // izuzmi svoju IP
-                        devices.add(ip)
-                    }
-                }
+            // Detektuj uređaje koristeći ARP tabelu
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // Za Android 8.0+ koristimo pravilnu metodu za skeniranje mreže
+                devices.addAll(scanNetworkWithArp())
+            } else {
+                // Fallback za starije verzije - koristi demo podatke
+                devices.add("192.168.1.100")
+                devices.add("192.168.1.101")
+                devices.add("192.168.1.102")
             }
-            */
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
         return devices
+    }
+
+    private fun scanNetworkWithArp(): List<String> {
+        val devices = mutableListOf<String>()
+
+        try {
+            // Pravilna metoda za skeniranje mreže koristeći ARP tabelu
+            val process = Runtime.getRuntime().exec("ip neigh")
+            val reader = BufferedReader(InputStreamReader(process.inputStream))
+            var line: String?
+
+            while (reader.readLine().also { line = it } != null) {
+                if (line?.contains("192.168") == true &&
+                    !line.contains("incomplete") &&
+                    !line.contains("REACHABLE")) {
+
+                    // Parsiraj IP adresu iz linije
+                    val ip = parseIPFromArpLine(line)
+                    if (!ip.isNullOrEmpty() && ip != "192.168.1.1" && ip != "192.168.1.0") {
+                        devices.add(ip)
+                    }
+                }
+            }
+
+            process.waitFor()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return devices
+    }
+
+    private fun parseIPFromArpLine(line: String): String? {
+        // Parsiranje IP adrese iz ARP linije
+        val parts = line.split("\\s+".toRegex())
+        if (parts.isNotEmpty()) {
+            val ip = parts[0]
+            // Proveri da li je validna IPv4 adresa
+            if (ip.matches(Regex("^\\d+\\.\\d+\\.\\d+\\.\\d+$"))) {
+                return ip
+            }
+        }
+        return null
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
