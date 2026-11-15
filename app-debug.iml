@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="apk" name="APK">
+      <configuration>
+        <option name="APK_PATH" value="$MODULE_DIR$/app-debug.apk" />
+        <option name="APP_PACKAGE" value="com.example.deviceblocker" />
+        <option name="DEBUGGABLE" value="true" />
+        <option name="SETUP_ISSUES">
+          <list>
+            <SetupIssue>
+              <option name="severity" value="ERROR" />
+              <option name="category" value="SDK_NOT_FOUND" />
+              <option name="extraInfo" value="34" />
+            </SetupIssue>
+            <SetupIssue>
+              <option name="severity" value="WARNING" />
+              <option name="category" value="DEBUG_SYMBOLS_MISSING" />
+              <option name="extraInfo" value="" />
+            </SetupIssue>
+          </list>
+        </option>
+        <option name="NATIVE_LIBRARIES">
+          <list>
+            <NativeLibrary>
+              <option name="sharedObjectFilePaths">
+                <list>
+                  <option value="$MODULE_DIR$/lib/x86/libandroidx.graphics.path.so" />
+                  <option value="$MODULE_DIR$/lib/x86_64/libandroidx.graphics.path.so" />
+                  <option value="$MODULE_DIR$/lib/arm64-v8a/libandroidx.graphics.path.so" />
+                  <option value="$MODULE_DIR$/lib/armeabi-v7a/libandroidx.graphics.path.so" />
+                </list>
+              </option>
+              <option name="name" value="libandroidx.graphics.path.so" />
+              <option name="debuggableSharedObjectFilesByAbi">
+                <map />
+              </option>
+              <option name="pathMappings">
+                <map />
+              </option>
+              <option name="hasDebugSymbols" value="false" />
+            </NativeLibrary>
+          </list>
+        </option>
+        <option name="JAVA_SOURCE_FOLDER_PATHS">
+          <set />
+        </option>
+      </configuration>
+    </facet>
+    <facet type="android" name="Android">
+      <configuration />
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/lib" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
